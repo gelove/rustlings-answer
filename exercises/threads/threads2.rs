@@ -19,7 +19,7 @@ fn main() {
         let status_shared = Arc::clone(&status);
         let handle = thread::spawn(move || {
             let start = Instant::now();
-            thread::sleep(Duration::from_millis(250));
+            thread::sleep(Duration::from_millis(100));
             // TODO: You must take an action before you update a shared value
             status_shared.write().unwrap().jobs_completed += 1;
             println!("elapsed => {}", start.elapsed().as_micros());
@@ -30,7 +30,6 @@ fn main() {
 
     // 可以注释for循环代码块
     for handle in handles {
-        println!("jobs completed {}", status.read().unwrap().jobs_completed);
         handle.join().unwrap();
         // TODO: Print the value of the JobStatus.jobs_completed. Did you notice anything
         // interesting in the output? Do you have to 'join' on all the handles?

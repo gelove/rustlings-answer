@@ -24,6 +24,7 @@ pub fn divide(a: i32, b: i32) -> Result<i32, DivisionError> {
     if b == 0 {
         return Err(DivisionError::DivideByZero);
     }
+    // 不能整除
     if a % b != 0 {
         return Err(DivisionError::NotDivisible(NotDivisibleError {
             dividend: a,

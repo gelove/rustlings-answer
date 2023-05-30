@@ -35,51 +35,54 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of Person
 // Otherwise, then return an instantiated Person object with the results
 
-impl From<&str> for Person {
-    fn from(s: &str) -> Person {
-        let person = Person::default();
-        if s.is_empty() {
-            return person;
-        }
-        let mut split = s.split(",");
-        if split.clone().count() != 2 {
-            return person;
-        }
-        let name = split.next().unwrap();
-        if name.is_empty() {
-            return person;
-        }
-        let age = split.next().unwrap().parse::<usize>();
-        match age {
-            Ok(age) => {
-                return Person {
-                    name: String::from(name),
-                    age,
-                };
-            }
-            Err(_) => return person,
-        }
-    }
-}
-
-// better solution
 // impl From<&str> for Person {
 //     fn from(s: &str) -> Person {
-//         let mut person = Person::default();
-//         let (name, age) = match s.split_once(",") {
-//             Some((name, age)) => (name.trim(), age.trim()),
-//             _ => return person,
-//         };
-//         if name.len() == 0 {
+//         let person = Person::default();
+//         if s.is_empty() {
 //             return person;
 //         }
-//         if let Ok(age) = age.parse::<usize>() {
-//             person.name = String::from(name);
-//             person.age = age;
+//         let mut split = s.split(",");
+//         if split.clone().count() != 2 {
+//             return person;
 //         }
-//         person
+//         let name = split.next().unwrap();
+//         if name.is_empty() {
+//             return person;
+//         }
+//         let age = split.next().unwrap().parse::<usize>();
+//         match age {
+//             Ok(age) => {
+//                 return Person {
+//                     name: String::from(name),
+//                     age,
+//                 };
+//             }
+//             Err(_) => return person,
+//         }
 //     }
 // }
+
+// better solution
+impl From<&str> for Person {
+    fn from(s: &str) -> Person {
+        let mut person = Person::default();
+        // split_once 只分割一次并返回一个Option
+        // 如果包含分隔符, 则返回一个Some变体(包含两个元素的元组)
+        // 元组的第一个元素是分隔符前的子串，第二个元素是分隔符后的子串
+        let (name, age) = match s.split_once(",") {
+            Some((name, age)) => (name.trim(), age.trim()),
+            _ => return person,
+        };
+        if name.len() == 0 {
+            return person;
+        }
+        if let Ok(age) = age.parse::<usize>() {
+            person.name = String::from(name);
+            person.age = age;
+        }
+        person
+    }
+}
 
 fn main() {
     // Use the `from` function
